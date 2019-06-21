@@ -25,8 +25,8 @@ export const Pc: FC = () => {
   return (
     <Container>
       <InnerContainer>
-        <LinkItem to="/boring_stuff_1">プライバシーポリシー</LinkItem>
-        <LinkItem to="/boring_stuff_2">特定商取引法に基づく表記</LinkItem>
+        <LinkItem to="/boring_stuff/1">プライバシーポリシー</LinkItem>
+        <LinkItem to="/boring_stuff/2">特定商取引法に基づく表記</LinkItem>
       </InnerContainer>
     </Container>
   );

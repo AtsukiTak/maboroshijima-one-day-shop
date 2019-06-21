@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {createGlobalStyle} from 'styled-components';
 
 import TopPage from './pages/top';
+import BoringStuff from './pages/boring_stuff';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -35,6 +36,16 @@ const App: React.FC = () => {
       <Router>
         <Switch>
           <Route path="/" exact render={() => <TopPage />} />
+          <Route
+            path="/boring_stuff/1"
+            exact
+            render={() => <BoringStuff textLink="/boring_txt/1.txt" />}
+          />
+          <Route
+            path="/boring_stuff/2"
+            exact
+            render={() => <BoringStuff textLink="/boring_txt/2.txt" />}
+          />
         </Switch>
       </Router>
     </>
