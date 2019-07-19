@@ -1,44 +1,83 @@
-import React, {FC, useState, useCallback} from 'react';
-import styled from 'styled-components';
+import React, {FC, useState, useEffect, useContext} from 'react';
 
-const MAX_MOBILE_WIDTH = 768;
-const MIN_PC_WIDTH = 980;
+const MaxMobileWidth = 768;
+const MaxTabletWidth = 980;
 
-interface ResponsiveProps {
-  renderPc: () => React.ReactNode;
-  renderTablet: () => React.ReactNode;
-  renderMobile: () => React.ReactNode;
+export function tablet(css: string): string {
+  return `@media (min-width: ${MaxMobileWidth}px) {
+    ${css}
+  }`;
 }
 
-export const Responsive: FC<ResponsiveProps> = ({
-  renderPc,
-  renderTablet,
-  renderMobile,
-}) => {
-  const [VW, setVW] = useState(window.innerWidth);
+export function pc(css: string): string {
+  return `@media (min-width: ${MaxTabletWidth}px) {
+    ${css}
+  }`;
+}
 
-  const ref = useCallback(node => {
-    if (node !== null) {
-      setVW(node.getBoundingClientRect().width);
-    }
-  }, []);
+enum Device {
+  Mobile = 'Mobile',
+  Tablet = 'Tablet',
+  Pc = 'Pc',
+}
 
-  console.log(VW);
+const DeviceContext = React.createContext<Device>(Device.Mobile);
+
+function deviceFromWidth(width: number): Device {
+  if (width < 768) {
+    return Device.Mobile;
+  } else if (width < 980) {
+    return Device.Tablet;
+  } else {
+    return Device.Pc;
+  }
+}
+
+export const Responsive: FC<{}> = ({children}) => {
+  const [device, setDevice] = useState(
+    deviceFromWidth(window.parent.screen.width),
+  );
+
+  useEffect(() => {
+    const resize = () => {
+      const curDevice = deviceFromWidth(window.parent.screen.width);
+      if (curDevice !== device) {
+        setDevice(curDevice);
+      }
+    };
+
+    resize();
+
+    window.onresize = resize;
+
+    return () => {
+      window.onresize = null;
+    };
+  }, [device, setDevice]);
+
+  console.log(device);
 
   return (
-    <View ref={ref}>
-      {VW < MAX_MOBILE_WIDTH
-        ? renderMobile()
-        : VW < MIN_PC_WIDTH
-        ? renderTablet()
-        : renderPc()}
-    </View>
+    <DeviceContext.Provider value={device}>{children}</DeviceContext.Provider>
   );
 };
 
-export default Responsive;
+interface ContentProps {
+  children: React.ReactNode;
+}
 
-const View = styled.div`
-  width: 100vw;
-  height: 100vh;
-`;
+const genDeviceContent: (device: Device) => FC<ContentProps> = device => ({
+  children,
+}) => {
+  const curDevice = useContext(DeviceContext);
+
+  return <>{curDevice === device ? children : null}</>;
+};
+
+export const Pc: FC<ContentProps> = React.memo(genDeviceContent(Device.Pc));
+export const Tablet: FC<ContentProps> = React.memo(
+  genDeviceContent(Device.Tablet),
+);
+export const Mobile: FC<ContentProps> = React.memo(
+  genDeviceContent(Device.Mobile),
+);

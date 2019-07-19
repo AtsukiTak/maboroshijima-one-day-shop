@@ -1,37 +1,17 @@
 import React, {FC} from 'react';
 import styled, {keyframes} from 'styled-components';
 
-import Responsive from 'components/responsive';
-import * as Footer from 'components/footer';
+import {pc} from 'components/responsive';
+import Footer from 'components/footer';
 
 const TopPage: FC = () => {
   return (
-    <Responsive
-      renderPc={() => (
-        <>
-          <Contents>
-            <LogoBig src="/img/logo.png" />
-          </Contents>
-          <Footer.Pc />
-        </>
-      )}
-      renderTablet={() => (
-        <>
-          <Contents>
-            <Logo src="/img/logo.png" />
-          </Contents>
-          <Footer.Tablet />
-        </>
-      )}
-      renderMobile={() => (
-        <>
-          <Contents>
-            <Logo src="/img/logo.png" />
-          </Contents>
-          <Footer.Mobile />
-        </>
-      )}
-    />
+    <>
+      <Contents>
+        <Logo src="/img/logo.png" />
+      </Contents>
+      <Footer />
+    </>
   );
 };
 
@@ -54,9 +34,9 @@ const Logo = styled.img`
   height: 100px;
   margin: 0 auto;
   animation: ${rotate} 3s linear infinite;
-`;
 
-const LogoBig = styled(Logo)`
-  width: 150px;
-  height: 150px;
+  ${pc(`
+    width: 150px;
+    height: 150px;
+  `)}
 `;
