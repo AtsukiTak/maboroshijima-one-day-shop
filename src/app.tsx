@@ -4,7 +4,6 @@ import {createGlobalStyle} from 'styled-components';
 
 import {Responsive} from 'components/responsive';
 import TopPage from './pages/top';
-import ShopPage from './pages/shop';
 import BoringStuff from './pages/boring_stuff';
 
 const App: React.FC = () => {
@@ -15,7 +14,6 @@ const App: React.FC = () => {
         <Router>
           <Switch>
             <Route path="/" exact render={() => <TopPage />} />
-            <Route path="/shop" exact render={() => <ShopPage />} />
             <Route
               path="/boring_stuff/1"
               exact

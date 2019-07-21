@@ -9,13 +9,15 @@ export interface Shirt {
   name: string;
   priceYen: number;
   end: Moment;
-  sumbnailUrl: string;
+  availableSize: string[];
+  sumbnail: string;
 }
 
 interface StoredShirt {
   name: string;
   priceYen: number;
   end: firebase.firestore.Timestamp;
+  availableSize: string[];
 }
 
 export function fetchAvailableShirt(): Promise<Shirt | null> {
@@ -47,19 +49,22 @@ function constructShirt(
   }
   const shirt = data as StoredShirt;
   const id = doc.id;
-  return fetchSumbnailUrlOfShirt(id).then(url => ({
+  return fetchSumbnail(id).then(sumbnail => ({
     id: id,
+    end: moment(shirt.end.toMillis()),
+    sumbnail: sumbnail,
     name: shirt.name,
     priceYen: shirt.priceYen,
-    end: moment(shirt.end.toMillis()),
-    sumbnailUrl: url,
+    availableSize: shirt.availableSize,
   }));
 }
 
-function fetchSumbnailUrlOfShirt(shirtId: string): Promise<string> {
+function fetchSumbnail(shirtId: string): Promise<string> {
   return firebase
     .storage()
     .ref(`shirts/${shirtId}/sumbnail.jpg`)
     .getDownloadURL()
-    .then(url => url as string);
+    .then(url => fetch(url, {mode: 'cors'}))
+    .then(res => res.blob())
+    .then(blob => URL.createObjectURL(blob));
 }

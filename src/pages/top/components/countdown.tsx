@@ -39,6 +39,5 @@ const Container = styled.h2`
   font-size: 40px;
   color: #4a4a4a;
   letter-spacing: 0;
-  margin: 0;
-  margin-top: 50px;
+  margin: 50px 0;
 `;
