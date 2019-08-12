@@ -34,7 +34,7 @@ function createInner(
       getStripe(mode).checkout.sessions.create({
         payment_method_types: ['card'],
         success_url: 'https://maboroshijima.com/purchase/success',
-        cancel_url: 'https://maboroshijima.com/purchase/cancel',
+        cancel_url: 'https://maboroshijima.com/',
         line_items: [
           {
             name: `${shirt.name} (${shirt.size})`,
