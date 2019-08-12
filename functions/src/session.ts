@@ -66,7 +66,7 @@ function fetchShirtData(id: string, size: string): Promise<ShirtData> {
     .then(doc => doc.data() as StoredShirtData)
     .then(shirt => {
       if (now < shirt.end && shirt.end < later) {
-        if (shirt.availableSize.include(size)) {
+        if (shirt.availableSize.includes(size)) {
           return {
             name: shirt.name,
             priceYen: shirt.priceYen,
