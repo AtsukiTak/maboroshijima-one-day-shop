@@ -1,7 +1,7 @@
 import React, {FC, useState, useEffect, useContext} from 'react';
 
-const MaxMobileWidth = 768;
-const MaxTabletWidth = 980;
+export const MaxMobileWidth = 768;
+export const MaxTabletWidth = 980;
 
 export function tablet(css: string): string {
   return `@media (min-width: ${MaxMobileWidth}px) {

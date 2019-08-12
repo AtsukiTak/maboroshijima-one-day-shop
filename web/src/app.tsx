@@ -4,34 +4,39 @@ import {createGlobalStyle} from 'styled-components';
 
 import {Responsive} from 'components/responsive';
 import TopPage from './pages/top';
+import PurchageSuccessPage from './pages/purchace_success';
 import BoringStuff from './pages/boring_stuff';
 
 const App: React.FC = () => {
   return (
     <>
       <GlobalStyle />
-      <Responsive>
-        <Router>
-          <Switch>
-            <Route path="/" exact render={() => <TopPage />} />
-            <Route
-              path="/boring_stuff/1"
-              exact
-              render={() => <BoringStuff textLink="/boring_txt/1.txt" />}
-            />
-            <Route
-              path="/boring_stuff/2"
-              exact
-              render={() => <BoringStuff textLink="/boring_txt/2.txt" />}
-            />
-          </Switch>
-        </Router>
-      </Responsive>
+      <Responsive />
+      <AppRouter />
     </>
   );
 };
 
 export default App;
+
+const AppRouter: React.FC = () => (
+  <Router>
+    <Switch>
+      <Route path="/" exact component={TopPage} />
+      <Route path="/purchace/success" exact component={PurchageSuccessPage} />
+      <Route
+        path="/boring_stuff/1"
+        exact
+        render={() => <BoringStuff textLink="/boring_txt/1.txt" />}
+      />
+      <Route
+        path="/boring_stuff/2"
+        exact
+        render={() => <BoringStuff textLink="/boring_txt/2.txt" />}
+      />
+    </Switch>
+  </Router>
+);
 
 const GlobalStyle = createGlobalStyle`
   body {
