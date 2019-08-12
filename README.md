@@ -8,3 +8,6 @@
 
 ### Get config
 - `firebase functions:config:get`
+
+### Others
+See `package.json` in `functions` directory
