@@ -11,7 +11,7 @@ const PurchaceSuccessPage: React.FC = () => {
       <FloatingLogo src="/img/logo.png" />
       <Msg>ご注文ありがとうございます</Msg>
       <SubMsg>
-        指定されたアドレス宛に領収書を送付しましたのでご確認ください
+        指定されたアドレス宛に領収書を送信しましたのでご確認ください
       </SubMsg>
       <LinkTop to="/">トップページへ</LinkTop>
     </Container>
