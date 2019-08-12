@@ -39,17 +39,19 @@ const Container = styled.div`
 `;
 
 const UnavailebleContent: FC = () => {
-  return <FloatingLogo src="/img/logo.png" />;
+  return <StyledFloatingLogo src="/img/logo.png" />;
 };
+
+const StyledFloatingLogo = styled(FloatingLogo)`
+  margin-top: 40vh;
+`;
 
 const ShopContent: FC<{shirt: Shirt}> = ({shirt}) => {
   return (
     <>
       <Image src={shirt.sumbnail} />
       <Name>{shirt.name}</Name>
-      <BuyComponent
-        shirt={shirt}
-      />
+      <BuyComponent shirt={shirt} />
       <Countdown end={shirt.end} />
     </>
   );
