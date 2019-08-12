@@ -23,7 +23,7 @@ const AppRouter: React.FC = () => (
   <Router>
     <Switch>
       <Route path="/" exact component={TopPage} />
-      <Route path="/purchace/success" exact component={PurchageSuccessPage} />
+      <Route path="/purchase/success" exact component={PurchageSuccessPage} />
       <Route
         path="/boring_stuff/1"
         exact
