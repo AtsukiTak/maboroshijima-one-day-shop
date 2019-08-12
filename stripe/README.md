@@ -1,12 +1,14 @@
 ## Commands
 
 ### Deploy
-- `firebase functions:config:set stripe.sk="[Stripe secret key]"`
-- `firebase functions:config:set stripe.pk="[Stripe public key]"`
 - `firebase deploy --only functions`
 
 ### Get config
 - `firebase functions:config:get`
+
+### Set config
+- `firebase functions:config:set stripe.sk="[Stripe secret key]"`
+- `firebase functions:config:set stripe.test.sk="[Stripe test secret key]"`
 
 ### Others
 See `package.json` in `functions` directory

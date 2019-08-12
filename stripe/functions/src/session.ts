@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 import * as D from '@mojotech/json-type-validation';
 import * as admin from 'firebase-admin';
 
-import stripe from './stripe';
+import {getStripe} from './stripe';
 
 const firestore = admin.firestore();
 const storage = admin.storage();
@@ -11,6 +11,18 @@ const storage = admin.storage();
  * POST /session
  */
 export function create(req: Request, res: Response): Promise<void> {
+  return createInner('live', req, res);
+}
+
+export function testCreate(req: Request, res: Response): Promise<void> {
+  return createInner('test', req, res);
+}
+
+function createInner(
+  mode: 'test' | 'live',
+  req: Request,
+  res: Response,
+): Promise<void> {
   return ReqBodyDecoder.runPromise(req.body)
     .then(({shirtId, size}) =>
       Promise.all([
@@ -19,7 +31,7 @@ export function create(req: Request, res: Response): Promise<void> {
       ]),
     )
     .then(([shirt, sumbnailUrl]) =>
-      stripe.checkout.sessions.create({
+      getStripe(mode).checkout.sessions.create({
         payment_method_types: ['card'],
         success_url: 'https://maboroshijima.com/purchase/success',
         cancel_url: 'https://maboroshijima.com/purchase/cancel',
