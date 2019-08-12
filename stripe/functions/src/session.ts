@@ -33,6 +33,7 @@ function createInner(
     .then(([shirt, sumbnailUrl]) =>
       getStripe(mode).checkout.sessions.create({
         payment_method_types: ['card'],
+        billing_address_collection: 'required',
         success_url: 'https://maboroshijima.com/purchase/success',
         cancel_url: 'https://maboroshijima.com/',
         line_items: [
