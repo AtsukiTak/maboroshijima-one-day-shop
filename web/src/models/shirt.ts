@@ -1,6 +1,9 @@
 import firebase from 'firebase';
 import 'firebase/firestore';
 import moment, {Moment} from 'moment';
+import * as D from '@mojotech/json-type-validation';
+
+import {request, Method} from 'api';
 
 const AvailableDurationMillis: number = 1000 * 60 * 60 * 24;
 
@@ -20,6 +23,11 @@ interface StoredShirt {
   availableSize: string[];
 }
 
+/*
+ * ======================
+ * Fetch Shirt
+ * ======================
+ */
 export function fetchAvailableShirt(): Promise<Shirt | null> {
   const now = firebase.firestore.Timestamp.now();
   const later = firebase.firestore.Timestamp.fromMillis(
@@ -68,3 +76,53 @@ function fetchSumbnail(shirtId: string): Promise<string> {
     .then(res => res.blob())
     .then(blob => URL.createObjectURL(blob));
 }
+
+/*
+ * ==================
+ * Buy Shirt
+ * ==================
+ */
+declare const Stripe: any;
+
+// 万が一他のpublic keyに設定されると危険、
+// かつ開発時だろうと他のpublic keyに変更することはない、
+// かつ外部に晒しても問題ない（どうせ晒される）ので、
+// public keyはハードコードする
+const stripePublicKey = (() => {
+  const env = process.env.NODE_ENV;
+  if (env === 'development' || env === 'test') {
+    return 'pk_test_7lunBZyq3PVaVHQeuVagvwfF00JE7idU9Z';
+  } else if (process.env.NODE_ENV === 'production') {
+    return 'pk_live_JYgGmOqHlWYVipqfOWNuxCRs00yD7PPefD';
+  }
+})();
+const stripe = Stripe(stripePublicKey);
+
+// 万が一他のURLに設定されると危険、
+// かつ開発時だろうと他のURLに変更することはない、
+// かつ外部に晒しても問題ない（どうせ晒される）ので、
+// APIのURLはハードコードする
+const CreateSessionApiEndPoint =
+  'https://us-central1-maboroshijima-8ce9a.cloudfunctions.net/stripe/session';
+
+export function buyShirt(shirtId: string, size: string): Promise<void> {
+  return request({
+    method: Method.POST,
+    url: CreateSessionApiEndPoint,
+    body: {
+      shirtId,
+      size,
+    },
+    decoder: BuyShirtDecoder,
+  })
+    .then(sessionId =>
+      stripe.redirectToCheckout({
+        sessionId,
+      }),
+    )
+    .then(sessionResult => console.log(sessionResult));
+}
+
+const BuyShirtDecoder: D.Decoder<string> = D.object({
+  id: D.string(),
+}).map(({id}) => id);

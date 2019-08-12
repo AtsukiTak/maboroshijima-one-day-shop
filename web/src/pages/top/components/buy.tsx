@@ -1,18 +1,21 @@
 import React, {FC, useState} from 'react';
 import styled, {keyframes} from 'styled-components';
 
+import {Shirt, buyShirt} from 'models/shirt';
+
 interface Props {
-  price: number;
-  availableSize: string[];
+  shirt: Shirt;
 }
 
-const Component: FC<Props> = ({price, availableSize}) => {
+const Component: FC<Props> = ({shirt}) => {
   const [expand, setExpand] = useState(false);
 
   return (
     <>
-      <BuyButton onClick={() => setExpand(true)}>&yen; {price}</BuyButton>
-      {expand ? <SizeSelectComponent availableSize={availableSize} /> : null}
+      <BuyButton onClick={() => setExpand(true)}>
+        &yen; {shirt.priceYen}
+      </BuyButton>
+      {expand ? <SizeSelectComponent shirt={shirt} /> : null}
     </>
   );
 };
@@ -35,14 +38,16 @@ const BuyButton = styled.button`
 `;
 
 interface SizeSelectProps {
-  availableSize: string[];
+  shirt: Shirt;
 }
 
-const SizeSelectComponent: FC<SizeSelectProps> = ({availableSize}) => {
+const SizeSelectComponent: FC<SizeSelectProps> = ({shirt}) => {
   return (
     <SizeSelectContainer>
-      {availableSize.map(size => (
-        <SizeSelectButton key={size}>{size}</SizeSelectButton>
+      {shirt.availableSize.map(size => (
+        <SizeSelectButton key={size} onClick={() => buyShirt(shirt.id, size)}>
+          {size}
+        </SizeSelectButton>
       ))}
     </SizeSelectContainer>
   );

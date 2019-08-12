@@ -68,8 +68,7 @@ const ShopContent: FC<{shirt: Shirt}> = ({shirt}) => {
       <Image src={shirt.sumbnail} />
       <Name>{shirt.name}</Name>
       <BuyComponent
-        availableSize={shirt.availableSize}
-        price={shirt.priceYen}
+        shirt={shirt}
       />
       <Countdown end={shirt.end} />
     </>
