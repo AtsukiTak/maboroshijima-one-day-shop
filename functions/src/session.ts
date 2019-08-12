@@ -53,32 +53,40 @@ const ReqBodyDecoder: D.Decoder<ReqBody> = D.object({
   size: D.string(),
 });
 
-const AvailableDurationMillis: number = 1000 * 60 * 60 * 24;
-
 function fetchShirtData(id: string, size: string): Promise<ShirtData> {
-  const now = admin.firestore.Timestamp.now();
-  const later = admin.firestore.Timestamp.fromMillis(
-    now.toMillis() + AvailableDurationMillis,
-  );
   return firestore
     .doc(`shirts/${id}`)
     .get()
     .then(doc => doc.data() as StoredShirtData)
     .then(shirt => {
-      if (now < shirt.end && shirt.end < later) {
-        if (shirt.availableSize.includes(size)) {
-          return {
-            name: shirt.name,
-            priceYen: shirt.priceYen,
-            size,
-          };
-        } else {
-          throw new Error(`T-shirt ${id} does not have size ${size}`);
-        }
-      } else {
-        throw new Error(`T-shirt ${id} is not sold now`);
-      }
+      errorIfShirtIsNotSoldNow(shirt);
+      errorIfSizeNotAvailable(shirt, size);
+      return {
+        name: shirt.name,
+        priceYen: shirt.priceYen,
+        size,
+      };
     });
+}
+
+const AvailableDurationMillis: number = 1000 * 60 * 60 * 24;
+
+function errorIfShirtIsNotSoldNow(shirt: StoredShirtData) {
+  const now = admin.firestore.Timestamp.now().seconds;
+  const start = shirt.end.seconds - AvailableDurationMillis;
+  const end = shirt.end.seconds;
+  // 売り始められているか
+  if (now < start) {
+    throw new Error(`T-shirt ${shirt.name} is preparing`);
+  } else if (end < now) {
+    throw new Error(`T-shirt ${shirt.name} is end`);
+  }
+}
+
+function errorIfSizeNotAvailable(shirt: StoredShirtData, size: string) {
+  if (!shirt.availableSize.includes(size)) {
+    throw new Error(`T-shirt ${shirt.name} does not have size ${size}`);
+  }
 }
 
 interface ShirtData {
