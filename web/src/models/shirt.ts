@@ -88,27 +88,30 @@ declare const Stripe: any;
 // かつ開発時だろうと他のpublic keyに変更することはない、
 // かつ外部に晒しても問題ない（どうせ晒される）ので、
 // public keyはハードコードする
-const stripePublicKey = (() => {
+const [stripePublicKey, createSessionApiEndpoint] = (() => {
+  const apiBase =
+    'https://us-central1-maboroshijima-8ce9a.cloudfunctions.net/stripe';
   const env = process.env.NODE_ENV;
   if (env === 'development' || env === 'test') {
-    return 'pk_test_7lunBZyq3PVaVHQeuVagvwfF00JE7idU9Z';
+    return [
+      'pk_test_7lunBZyq3PVaVHQeuVagvwfF00JE7idU9Z',
+      `${apiBase}/test/session`,
+    ];
   } else if (process.env.NODE_ENV === 'production') {
-    return 'pk_live_JYgGmOqHlWYVipqfOWNuxCRs00yD7PPefD';
+    return ['pk_live_JYgGmOqHlWYVipqfOWNuxCRs00yD7PPefD', `${apiBase}/session`];
+  } else {
+    throw new Error(`Unexpected NODE_ENV : ${env}`);
   }
 })();
-const stripe = Stripe(stripePublicKey);
 
-// 万が一他のURLに設定されると危険、
-// かつ開発時だろうと他のURLに変更することはない、
-// かつ外部に晒しても問題ない（どうせ晒される）ので、
-// APIのURLはハードコードする
-const CreateSessionApiEndPoint =
-  'https://us-central1-maboroshijima-8ce9a.cloudfunctions.net/stripe/session';
+console.log(stripePublicKey);
+
+const stripe = Stripe(stripePublicKey);
 
 export function buyShirt(shirtId: string, size: string): Promise<void> {
   return request({
     method: Method.POST,
-    url: CreateSessionApiEndPoint,
+    url: createSessionApiEndpoint,
     body: {
       shirtId,
       size,
