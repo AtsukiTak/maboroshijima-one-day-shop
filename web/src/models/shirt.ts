@@ -104,8 +104,6 @@ const [stripePublicKey, createSessionApiEndpoint] = (() => {
   }
 })();
 
-console.log(stripePublicKey);
-
 const stripe = Stripe(stripePublicKey);
 
 export function buyShirt(shirtId: string, size: string): Promise<void> {

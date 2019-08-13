@@ -42,13 +42,26 @@ interface SizeSelectProps {
 }
 
 const SizeSelectComponent: FC<SizeSelectProps> = ({shirt}) => {
+  const [processing, setProcessing] = useState(false);
+
   return (
     <SizeSelectContainer>
-      {shirt.availableSize.map(size => (
-        <SizeSelectButton key={size} onClick={() => buyShirt(shirt.id, size)}>
-          {size}
-        </SizeSelectButton>
-      ))}
+      {shirt.availableSize.map(size =>
+        processing ? (
+          <SizeSelectButton key={size} disabled>
+            ...
+          </SizeSelectButton>
+        ) : (
+          <SizeSelectButton
+            key={size}
+            onClick={() => {
+              setProcessing(true);
+              buyShirt(shirt.id, size);
+            }}>
+            {size}
+          </SizeSelectButton>
+        ),
+      )}
     </SizeSelectContainer>
   );
 };
