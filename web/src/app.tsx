@@ -4,6 +4,7 @@ import {createGlobalStyle} from 'styled-components';
 
 import {Responsive} from 'components/responsive';
 import TopPage from './pages/top';
+import AboutPage from './pages/about';
 import PurchageSuccessPage from './pages/purchace_success';
 import BoringStuff from './pages/boring_stuff';
 
@@ -23,6 +24,7 @@ const AppRouter: React.FC = () => (
   <Router>
     <Switch>
       <Route path="/" exact component={TopPage} />
+      <Route path="/about" exact component={AboutPage} />
       <Route path="/purchase/success" exact component={PurchageSuccessPage} />
       <Route
         path="/boring_stuff/1"

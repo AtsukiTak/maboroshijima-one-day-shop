@@ -35,16 +35,12 @@ const Container = styled.div`
   max-width: 500px;
   min-height: calc(100vh - 30px);
   margin: 0 auto;
-  padding-top: 100px;
+  padding-top: 40vh;
 `;
 
 const UnavailebleContent: FC = () => {
-  return <StyledFloatingLogo src="/img/logo.png" />;
+  return <FloatingLogo src="/img/logo.png" />;
 };
-
-const StyledFloatingLogo = styled(FloatingLogo)`
-  margin-top: 40vh;
-`;
 
 const ShopContent: FC<{shirt: Shirt}> = ({shirt}) => {
   return (
