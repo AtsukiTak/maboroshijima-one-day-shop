@@ -1,11 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
+import ReactGA from 'react-ga';
 
 import {pc} from 'components/responsive';
 import {FloatingLogo} from 'components/logo';
 
 const AboutPage: React.FC = () => {
+  React.useEffect(() => {
+    ReactGA.pageview('/about', [], 'About');
+  }, []);
+
   return (
     <>
       <Contents>

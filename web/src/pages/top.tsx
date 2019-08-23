@@ -1,5 +1,6 @@
 import React, {FC, useState, useEffect} from 'react';
 import styled from 'styled-components';
+import ReactGA from 'react-ga';
 
 import {Shirt, fetchAvailableShirt} from 'models/shirt';
 import Footer from 'components/footer';
@@ -39,10 +40,16 @@ const Container = styled.div`
 `;
 
 const UnavailebleContent: FC = () => {
+  useEffect(() => {
+    ReactGA.pageview('/', [], 'Empty Shop');
+  }, []);
   return <FloatingLogo />;
 };
 
 const ShopContent: FC<{shirt: Shirt}> = ({shirt}) => {
+  useEffect(() => {
+    ReactGA.pageview('/', [], 'Shop');
+  }, []);
   return (
     <>
       <Image src={shirt.sumbnail} />
