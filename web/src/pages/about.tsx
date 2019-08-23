@@ -3,12 +3,15 @@ import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 
 import {pc} from 'components/responsive';
+import {FloatingLogo} from 'components/logo';
 
 const AboutPage: React.FC = () => {
   return (
     <>
       <Contents>
-        <Subject>What is マボロシジマ？</Subject>
+        <LogoContainer>
+          <FloatingLogo />
+        </LogoContainer>
         <Msg>マボロシジマはTシャツ屋さんです</Msg>
         <Msg>１週間に1日だけ、その日限定のTシャツを販売します</Msg>
         <LinkToShop to="/">ショップへ</LinkToShop>
@@ -27,17 +30,8 @@ const Contents = styled.div`
   padding-top: 10vh;
 `;
 
-const Subject = styled.h2`
-  width: 100%;
-  margin: 0;
-  padding: 10vh 0px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: 400;
-
-  ${pc(`
-    font-size: 22px;
-  `)}
+const LogoContainer = styled.div`
+  padding: 15vh 0px 5vh 0px;
 `;
 
 const Msg = styled.p`

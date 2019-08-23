@@ -1,6 +1,11 @@
+import React from 'react';
 import styled, {keyframes} from 'styled-components';
 
 import {pc} from 'components/responsive';
+
+export const FloatingLogo: React.FC = () => {
+  return <FloatingLogoInner src="/img/logo.png" />;
+};
 
 const floating = keyframes`
   50% {
@@ -8,7 +13,7 @@ const floating = keyframes`
   }
 `;
 
-export const FloatingLogo = styled.img`
+const FloatingLogoInner = styled.img`
   display: block;
   width: 100px;
   height: 100px;

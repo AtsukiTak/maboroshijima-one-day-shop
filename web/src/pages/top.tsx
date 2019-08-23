@@ -39,7 +39,7 @@ const Container = styled.div`
 `;
 
 const UnavailebleContent: FC = () => {
-  return <FloatingLogo src="/img/logo.png" />;
+  return <FloatingLogo />;
 };
 
 const ShopContent: FC<{shirt: Shirt}> = ({shirt}) => {

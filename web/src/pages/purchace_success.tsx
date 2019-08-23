@@ -8,7 +8,7 @@ import {FloatingLogo} from 'components/logo';
 const PurchaceSuccessPage: React.FC = () => {
   return (
     <Container>
-      <FloatingLogo src="/img/logo.png" />
+      <FloatingLogo />
       <Msg>ご注文ありがとうございます</Msg>
       <SubMsg>
         指定されたアドレス宛に領収書を送信しましたのでご確認ください
