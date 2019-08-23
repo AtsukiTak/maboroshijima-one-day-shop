@@ -1,5 +1,6 @@
 import React, {FC, useState} from 'react';
-import styled, {keyframes} from 'styled-components';
+import styled from 'styled-components';
+import {Link} from 'react-router-dom';
 
 import {Shirt, buyShirt} from 'models/shirt';
 
@@ -9,13 +10,35 @@ interface Props {
 
 const Component: FC<Props> = ({shirt}) => {
   const [expand, setExpand] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   return (
     <>
-      <BuyButton onClick={() => setExpand(true)}>
+      <BuyButton onClick={() => setExpand(!expand)}>
         &yen; {shirt.priceYen}
       </BuyButton>
-      {expand ? <SizeSelectComponent shirt={shirt} /> : null}
+      <SizeSelectContainer show={expand}>
+        <SelectSizeMsg>サイズを選択してください</SelectSizeMsg>
+        {shirt.availableSize.map(size =>
+          processing ? (
+            <SizeSelectButton key={size} disabled>
+              ...
+            </SizeSelectButton>
+          ) : (
+            <SizeSelectButton
+              key={size}
+              onClick={() => {
+                setProcessing(true);
+                buyShirt(shirt.id, size);
+              }}>
+              {size}
+            </SizeSelectButton>
+          ),
+        )}
+        <LinkToSizeTable to="/size_table" target="_blank">
+          サイズ表を確認する
+        </LinkToSizeTable>
+      </SizeSelectContainer>
     </>
   );
 };
@@ -37,45 +60,20 @@ const BuyButton = styled.button`
   cursor: pointer;
 `;
 
-interface SizeSelectProps {
-  shirt: Shirt;
-}
-
-const SizeSelectComponent: FC<SizeSelectProps> = ({shirt}) => {
-  const [processing, setProcessing] = useState(false);
-
-  return (
-    <SizeSelectContainer>
-      {shirt.availableSize.map(size =>
-        processing ? (
-          <SizeSelectButton key={size} disabled>
-            ...
-          </SizeSelectButton>
-        ) : (
-          <SizeSelectButton
-            key={size}
-            onClick={() => {
-              setProcessing(true);
-              buyShirt(shirt.id, size);
-            }}>
-            {size}
-          </SizeSelectButton>
-        ),
-      )}
-    </SizeSelectContainer>
-  );
-};
-
-const start = keyframes`
-  0% {
-    transform-origin: 50% 0%;
-    transform: scaleY(0)
-  }
+const SizeSelectContainer = styled('div')<{show: boolean}>`
+  width: 100%;
+  height: ${props => (props.show ? 'inherit' : 0)};
+  transform: ${props => (props.show ? 'scaleY(1)' : 'scaleY(0)')};
+  transition: all 200ms 0s ease-out;
 `;
 
-const SizeSelectContainer = styled.div`
+const SelectSizeMsg = styled.p`
   width: 100%;
-  animation: ${start} 0.2s linear;
+  margin: 0;
+  margin-top: 50px;
+  padding: 0;
+  text-align: center;
+  font-size: 16px;
 `;
 
 const SizeSelectButton = styled.button`
@@ -91,4 +89,13 @@ const SizeSelectButton = styled.button`
   text-align: center;
   line-height: 30px;
   cursor: pointer;
+`;
+
+const LinkToSizeTable = styled(Link)`
+  display: block;
+  width: 100%;
+  margin-top: 30px;
+  text-align: center;
+  text-decoration: underline;
+  font-size: 12px;
 `;

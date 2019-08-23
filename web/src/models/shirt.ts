@@ -23,6 +23,17 @@ interface StoredShirt {
   availableSize: string[];
 }
 
+export function createDemoShirt(sumbnail: string): Shirt {
+  return {
+    id: 'demo',
+    name: 'The demo t-shirt',
+    priceYen: 4200,
+    end: moment().add(7, 'hours'),
+    availableSize: ['S', 'M', 'L', 'XL'],
+    sumbnail: sumbnail,
+  };
+}
+
 /*
  * ======================
  * Fetch Shirt
