@@ -15,10 +15,13 @@ const Component: FC<Props> = ({shirt}) => {
   return (
     <>
       <BuyButton onClick={() => setExpand(!expand)}>
-        &yen; {shirt.priceYen}
+        &yen; {shirt.priceYen} で購入
       </BuyButton>
+      <PriceMsg>価格は税込、送料無料です</PriceMsg>
       <SizeSelectContainer show={expand}>
-        <SelectSizeMsg>サイズを選択してください</SelectSizeMsg>
+        <SelectSizeMsg>
+          {processing ? 'お待ちください' : 'サイズを選択してください'}
+        </SelectSizeMsg>
         {shirt.availableSize.map(size =>
           processing ? (
             <SizeSelectButton key={size} disabled>
@@ -48,7 +51,7 @@ export default Component;
 const BuyButton = styled.button`
   display: block;
   vertical-align: top;
-  width: 100px;
+  width: 150px;
   margin: 0 auto;
   margin-top: 40px;
   background-color: #4a4a4a;
@@ -58,6 +61,14 @@ const BuyButton = styled.button`
   text-align: center;
   line-height: 30px;
   cursor: pointer;
+`;
+
+const PriceMsg = styled.p`
+  width: 200px;
+  margin: 15px auto 0 auto;
+  font-size: 12px;
+  text-align: center;
+  color: gray;
 `;
 
 const SizeSelectContainer = styled('div')<{show: boolean}>`
@@ -70,8 +81,8 @@ const SizeSelectContainer = styled('div')<{show: boolean}>`
 const SelectSizeMsg = styled.p`
   width: 100%;
   margin: 0;
-  margin-top: 50px;
   padding: 0;
+  padding-top: 50px;
   text-align: center;
   font-size: 16px;
 `;
