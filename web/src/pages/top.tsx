@@ -40,6 +40,7 @@ const EmptyShop: FC = () => {
     <>
       <UnavailableContainer>
         <FloatingLogo />
+        <SoldOut>Sorry, sold out</SoldOut>
       </UnavailableContainer>
       <Footer />
     </>
@@ -52,6 +53,13 @@ const UnavailableContainer = styled.div`
   height: calc(100vh - 30px);
   margin: 0 auto;
   padding-top: 40vh;
+`;
+
+const SoldOut = styled.p`
+  width: 100%;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
 `;
 
 const Shop: FC<{shirt: Shirt}> = ({shirt}) => {
