@@ -5,6 +5,7 @@ import ReactGA from 'react-ga';
 
 import {pc} from 'components/responsive';
 import {FloatingLogo} from 'components/logo';
+import FBPlugin from './about/components/fb-plugin';
 
 const AboutPage: React.FC = () => {
   React.useEffect(() => {
@@ -19,7 +20,9 @@ const AboutPage: React.FC = () => {
         </LogoContainer>
         <Msg>マボロシジマはTシャツ屋さんです</Msg>
         <Msg>１週間に1日だけ、その日限定のTシャツを販売します</Msg>
-        <LinkToShop to="/">ショップへ</LinkToShop>
+        <Msg>新作Tシャツの販売情報はFacebookで配信しています</Msg>
+        <FBPlugin />
+        <LinkToShop to="/">ショップへ戻る</LinkToShop>
       </Contents>
     </>
   );
@@ -32,17 +35,17 @@ const Contents = styled.div`
   max-width: 500px;
   min-height: calc(100vh - 30px);
   margin: 0 auto;
-  padding-top: 10vh;
+  padding-bottom: 100px;
 `;
 
 const LogoContainer = styled.div`
-  padding: 15vh 0px 5vh 0px;
+  padding: 10vh 0px 5vh 0px;
 `;
 
 const Msg = styled.p`
   width: 100%;
   margin: 0;
-  padding: 3vh 0;
+  padding: 30px 0;
   text-align: center;
   font-size: 13px;
   font-weight: 400;
@@ -55,7 +58,7 @@ const Msg = styled.p`
 const LinkToShop = styled(Link)`
   display: block;
   width: 100%;
-  margin-top: 20vh;
+  margin-top: 100px;
   text-decoration: underline;
   font-size: 15px;
   text-align: center;
