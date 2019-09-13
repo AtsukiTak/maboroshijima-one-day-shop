@@ -40,10 +40,11 @@ export interface ShirtDocument {
 export class Storage {
   // # Panic
   // if shirt is not available.
-  static async queryShirtThumbnailUrl(id: string): Promise<string> {
-    return await firebase
+  static async queryShirtImageUrls(id: string): Promise<string[]> {
+    const refs = await firebase
       .storage()
-      .ref(`shirts/${id}/sumbnail.jpg`)
-      .getDownloadURL();
+      .ref(`shirts/${id}`)
+      .list();
+    return await Promise.all(refs.items.map(ref => ref.getDownloadURL()));
   }
 }

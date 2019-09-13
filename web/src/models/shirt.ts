@@ -11,17 +11,17 @@ export class Shirt {
     readonly priceYen: number,
     readonly end: Moment,
     readonly availableSize: string[],
-    readonly thumbnail: Image
+    readonly images: Image[]
   ) {}
 
-  static createDemoShirt(thumbnail: Image): Shirt {
+  static createDemoShirt(images: Image[]): Shirt {
     return new Shirt(
       "demo",
       "The demo t-shirt",
       4200,
       moment().add(7, "hours"),
       ["S", "M", "L", "XL"],
-      thumbnail
+      images
     );
   }
 
@@ -37,15 +37,17 @@ export class ShirtRepository {
       return null;
     } else {
       const { id, doc } = res;
-      const thumbnailUrl = await Storage.queryShirtThumbnailUrl(id);
-      const thumbnail = await Image.download(thumbnailUrl);
+      const urls = await Storage.queryShirtImageUrls(id);
+      const images = await Promise.all(
+        urls.map(url => Image.download(url))
+      );
       return new Shirt(
         id,
         doc.name,
         doc.priceYen,
         moment(doc.end.toMillis()),
         doc.availableSize,
-        thumbnail
+        images
       );
     }
   }
