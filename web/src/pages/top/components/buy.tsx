@@ -1,14 +1,14 @@
-import React, {FC, useState} from 'react';
-import styled from 'styled-components';
-import {Link} from 'react-router-dom';
+import React, { FC, useState } from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
 
-import {Shirt} from 'models/shirt';
+import { Shirt } from "models/shirt";
 
 interface Props {
   shirt: Shirt;
 }
 
-const Component: FC<Props> = ({shirt}) => {
+const Component: FC<Props> = ({ shirt }) => {
   const [expand, setExpand] = useState(false);
   const [processing, setProcessing] = useState(false);
 
@@ -20,7 +20,7 @@ const Component: FC<Props> = ({shirt}) => {
       <PriceMsg>価格は税込、送料無料です</PriceMsg>
       <SizeSelectContainer show={expand}>
         <SelectSizeMsg>
-          {processing ? 'お待ちください' : 'サイズを選択してください'}
+          {processing ? "お待ちください" : "サイズを選択してください"}
         </SelectSizeMsg>
         {shirt.availableSize.map(size =>
           processing ? (
@@ -33,10 +33,11 @@ const Component: FC<Props> = ({shirt}) => {
               onClick={() => {
                 setProcessing(true);
                 shirt.buy(size);
-              }}>
+              }}
+            >
               {size}
             </SizeSelectButton>
-          ),
+          )
         )}
         <LinkToSizeTable to="/size_table" target="_blank">
           サイズ表を確認する
@@ -71,10 +72,10 @@ const PriceMsg = styled.p`
   color: gray;
 `;
 
-const SizeSelectContainer = styled('div')<{show: boolean}>`
+const SizeSelectContainer = styled("div")<{ show: boolean }>`
   width: 100%;
-  height: ${props => (props.show ? 'inherit' : 0)};
-  transform: ${props => (props.show ? 'scaleY(1)' : 'scaleY(0)')};
+  height: ${props => (props.show ? "inherit" : 0)};
+  transform: ${props => (props.show ? "scaleY(1)" : "scaleY(0)")};
   transition: all 200ms 0s ease-out;
 `;
 

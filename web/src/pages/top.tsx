@@ -70,7 +70,7 @@ const Shop: FC<{shirt: Shirt}> = ({shirt}) => {
   return (
     <>
       <ShopContainer>
-        <Image src={shirt.thumbnailUrl} />
+        <Image src={shirt.thumbnail.url} />
         <Name>{shirt.name}</Name>
         <BuyComponent shirt={shirt} />
         <Countdown end={shirt.end} />
