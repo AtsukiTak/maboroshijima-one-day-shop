@@ -2,7 +2,7 @@ import React, {FC, useState, useEffect} from 'react';
 import styled from 'styled-components';
 import ReactGA from 'react-ga';
 
-import {Shirt, fetchAvailableShirt, createDemoShirt} from 'models/shirt';
+import {Shirt, ShirtRepository} from 'models/shirt';
 import Footer from 'components/footer';
 import {FloatingLogo} from 'components/logo';
 import Countdown from './top/components/countdown';
@@ -12,14 +12,14 @@ const TopPage: FC = () => {
   const [shirt, setShirt] = useState<Shirt | null>(null);
 
   useEffect(() => {
-    fetchAvailableShirt().then(setShirt);
+    ShirtRepository.fetchAvailableOne().then(setShirt);
 
     // 開発用にデモのTシャツを設定する場合は以下のコメントアウトを消し、
     // demoShirtSumbnailUrl を設定する。
     // また、↑をコメントアウトするのも忘れない。
     /*
     const demoShirtSumbnailUrl ='';
-    setShirt(createDemoShirt(demoShirtSumbnailUrl));
+    setShirt(Shirt.createDemoShirt(demoShirtSumbnailUrl));
      */
   }, []);
 
@@ -70,7 +70,7 @@ const Shop: FC<{shirt: Shirt}> = ({shirt}) => {
   return (
     <>
       <ShopContainer>
-        <Image src={shirt.sumbnail} />
+        <Image src={shirt.thumbnailUrl} />
         <Name>{shirt.name}</Name>
         <BuyComponent shirt={shirt} />
         <Countdown end={shirt.end} />

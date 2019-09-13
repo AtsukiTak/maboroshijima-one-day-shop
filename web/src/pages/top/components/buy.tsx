@@ -2,7 +2,7 @@ import React, {FC, useState} from 'react';
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 
-import {Shirt, buyShirt} from 'models/shirt';
+import {Shirt} from 'models/shirt';
 
 interface Props {
   shirt: Shirt;
@@ -32,7 +32,7 @@ const Component: FC<Props> = ({shirt}) => {
               key={size}
               onClick={() => {
                 setProcessing(true);
-                buyShirt(shirt.id, size);
+                shirt.buy(size);
               }}>
               {size}
             </SizeSelectButton>

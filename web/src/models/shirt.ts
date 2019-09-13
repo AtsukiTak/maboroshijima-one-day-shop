@@ -1,140 +1,50 @@
-import firebase from 'firebase';
-import 'firebase/firestore';
-import moment, {Moment} from 'moment';
-import * as D from '@mojotech/json-type-validation';
+import moment, { Moment } from "moment";
 
-import {request, Method} from 'api';
+import { Firestore, Storage } from "infra/firebase";
+import { buyShirt } from "infra/stripe";
 
-const AvailableDurationMillis: number = 1000 * 60 * 60 * 24;
+export class Shirt {
+  constructor(
+    readonly id: string,
+    readonly name: string,
+    readonly priceYen: number,
+    readonly end: Moment,
+    readonly availableSize: string[],
+    readonly thumbnailUrl: string
+  ) {}
 
-export interface Shirt {
-  id: string;
-  name: string;
-  priceYen: number;
-  end: Moment;
-  availableSize: string[];
-  sumbnail: string;
-}
-
-interface StoredShirt {
-  name: string;
-  priceYen: number;
-  end: firebase.firestore.Timestamp;
-  availableSize: string[];
-}
-
-export function createDemoShirt(sumbnail: string): Shirt {
-  return {
-    id: 'demo',
-    name: 'The demo t-shirt',
-    priceYen: 4200,
-    end: moment().add(7, 'hours'),
-    availableSize: ['S', 'M', 'L', 'XL'],
-    sumbnail: sumbnail,
-  };
-}
-
-/*
- * ======================
- * Fetch Shirt
- * ======================
- */
-export function fetchAvailableShirt(): Promise<Shirt | null> {
-  const now = firebase.firestore.Timestamp.now();
-  const later = firebase.firestore.Timestamp.fromMillis(
-    now.toMillis() + AvailableDurationMillis,
-  );
-  return firebase
-    .firestore()
-    .collection('shirts')
-    .where('end', '>', now)
-    .where('end', '<', later) // end - AvailableDurationMillis < now
-    .get()
-    .then(snapshot => {
-      if (snapshot.docs.length === 0) {
-        return Promise.resolve(null);
-      } else {
-        return constructShirt(snapshot.docs[0]);
-      }
-    });
-}
-
-function constructShirt(
-  doc: firebase.firestore.DocumentSnapshot,
-): Promise<Shirt> {
-  const data = doc.data();
-  if (data === undefined) {
-    throw new Error('Shirt data is undefined');
+  static createDemoShirt(thumbnailUrl: string): Shirt {
+    return new Shirt(
+      "demo",
+      "The demo t-shirt",
+      4200,
+      moment().add(7, "hours"),
+      ["S", "M", "L", "XL"],
+      thumbnailUrl
+    );
   }
-  const shirt = data as StoredShirt;
-  const id = doc.id;
-  return fetchSumbnail(id).then(sumbnail => ({
-    id: id,
-    end: moment(shirt.end.toMillis()),
-    sumbnail: sumbnail,
-    name: shirt.name,
-    priceYen: shirt.priceYen,
-    availableSize: shirt.availableSize,
-  }));
-}
 
-function fetchSumbnail(shirtId: string): Promise<string> {
-  return firebase
-    .storage()
-    .ref(`shirts/${shirtId}/sumbnail.jpg`)
-    .getDownloadURL()
-    .then(url => fetch(url, {mode: 'cors'}))
-    .then(res => res.blob())
-    .then(blob => URL.createObjectURL(blob));
-}
-
-/*
- * ==================
- * Buy Shirt
- * ==================
- */
-declare const Stripe: any;
-
-// 万が一他のpublic keyに設定されると危険、
-// かつ開発時だろうと他のpublic keyに変更することはない、
-// かつ外部に晒しても問題ない（どうせ晒される）ので、
-// public keyはハードコードする
-const [stripePublicKey, createSessionApiEndpoint] = (() => {
-  const apiBase =
-    'https://us-central1-maboroshijima-8ce9a.cloudfunctions.net/stripe';
-  const env = process.env.NODE_ENV;
-  if (env === 'development' || env === 'test') {
-    return [
-      'pk_test_7lunBZyq3PVaVHQeuVagvwfF00JE7idU9Z',
-      `${apiBase}/test/session`,
-    ];
-  } else if (process.env.NODE_ENV === 'production') {
-    return ['pk_live_JYgGmOqHlWYVipqfOWNuxCRs00yD7PPefD', `${apiBase}/session`];
-  } else {
-    throw new Error(`Unexpected NODE_ENV : ${env}`);
+  buy(size: string): Promise<void> {
+    return buyShirt(this.id, size);
   }
-})();
-
-const stripe = Stripe(stripePublicKey);
-
-export function buyShirt(shirtId: string, size: string): Promise<void> {
-  return request({
-    method: Method.POST,
-    url: createSessionApiEndpoint,
-    body: {
-      shirtId,
-      size,
-    },
-    decoder: BuyShirtDecoder,
-  })
-    .then(sessionId =>
-      stripe.redirectToCheckout({
-        sessionId,
-      }),
-    )
-    .then(sessionResult => console.log(sessionResult));
 }
 
-const BuyShirtDecoder: D.Decoder<string> = D.object({
-  id: D.string(),
-}).map(({id}) => id);
+export class ShirtRepository {
+  static async fetchAvailableOne(): Promise<Shirt | null> {
+    const res = await Firestore.fetchAvailableShirt();
+    if (!res) {
+      return null;
+    } else {
+      const { id, doc } = res;
+      const thumbnailUrl = await Storage.queryShirtThumbnailUrl(id);
+      return new Shirt(
+        id,
+        doc.name,
+        doc.priceYen,
+        moment(doc.end.toMillis()),
+        doc.availableSize,
+        thumbnailUrl
+      );
+    }
+  }
+}
