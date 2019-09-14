@@ -38,13 +38,18 @@ export interface ShirtDocument {
 }
 
 export class Storage {
+  // "/shirts/${id}" directory以下のimageのURL一覧取得する。
+  // Ordered by image name
+  //
   // # Panic
   // if shirt is not available.
   static async queryShirtImageUrls(id: string): Promise<string[]> {
-    const refs = await firebase
+    const listResult = await firebase
       .storage()
       .ref(`shirts/${id}`)
       .list();
-    return await Promise.all(refs.items.map(ref => ref.getDownloadURL()));
+    const refs = listResult.items;
+    refs.sort((a, b) => a.name.localeCompare(b.name));
+    return await Promise.all(refs.map(ref => ref.getDownloadURL()));
   }
 }
