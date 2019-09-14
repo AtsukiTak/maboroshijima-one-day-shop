@@ -11,24 +11,38 @@ import BuyComponent from "./top/components/buy";
 import ImageComponent from "./top/components/image";
 
 const TopPage: FC = () => {
-  const [shirt, setShirt] = useState<Shirt | null>(null);
+  const [shirt, setShirt] = useState<Shirt | null | 'Checking'>('Checking');
 
   useEffect(() => {
-    // ShirtRepository.fetchAvailableOne().then(setShirt);
+    ShirtRepository.fetchAvailableOne().then(setShirt);
 
     // 開発用に次に販売するシャツのデータを取得する。
     // ↑をコメントアウトするのを忘れない。
-    ShirtRepository.fetchDemoOneForTesting().then(setShirt);
+    // ShirtRepository.fetchDemoOneForTesting().then(setShirt);
   }, []);
 
-  if (shirt) {
-    return <Shop shirt={shirt} />;
-  } else {
+  if (shirt === 'Checking') {
+    return <CheckingShop />;
+  } else if (shirt === null) {
     return <EmptyShop />;
+  } else {
+    return <Shop shirt={shirt} />;
   }
 };
 
 export default TopPage;
+
+const CheckingShop: FC = () => {
+  return (
+    <>
+      <UnavailableContainer>
+        <FloatingLogo />
+        <Message>Loading...</Message>
+      </UnavailableContainer>
+      <Footer />
+    </>
+  );
+};
 
 const EmptyShop: FC = () => {
   useEffect(() => {
@@ -38,7 +52,7 @@ const EmptyShop: FC = () => {
     <>
       <UnavailableContainer>
         <FloatingLogo />
-        <SoldOut>Sorry, sold out</SoldOut>
+        <Message>Sorry, sold out</Message>
       </UnavailableContainer>
       <Footer />
     </>
@@ -53,7 +67,7 @@ const UnavailableContainer = styled.div`
   padding-top: 40vh;
 `;
 
-const SoldOut = styled.p`
+const Message = styled.p`
   width: 100%;
   font-size: 18px;
   font-weight: bold;
