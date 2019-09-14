@@ -5,8 +5,10 @@ import ReactGA from "react-ga";
 import { Shirt, ShirtRepository } from "models/shirt";
 import Footer from "components/footer";
 import { FloatingLogo } from "components/logo";
+
 import Countdown from "./top/components/countdown";
 import BuyComponent from "./top/components/buy";
+import ImageComponent from "./top/components/image";
 
 const TopPage: FC = () => {
   const [shirt, setShirt] = useState<Shirt | null>(null);
@@ -66,7 +68,7 @@ const Shop: FC<{ shirt: Shirt }> = ({ shirt }) => {
   return (
     <>
       <ShopContainer>
-        <ImageComponent src={shirt.images[0].url} />
+        <ImageComponent images={shirt.images} />
         <Name>{shirt.name}</Name>
         <BuyComponent shirt={shirt} />
         <Countdown end={shirt.end} />
@@ -82,12 +84,6 @@ const ShopContainer = styled.div`
   min-height: calc(100vh - 50px);
   margin: 0 auto;
   padding-top: 10vh;
-`;
-
-const ImageComponent = styled.img`
-  display: block;
-  width: 80%;
-  margin: 0 auto;
 `;
 
 const Name = styled.h3`
