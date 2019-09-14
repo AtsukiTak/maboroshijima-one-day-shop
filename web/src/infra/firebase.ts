@@ -18,6 +18,7 @@ export class Firestore {
       .collection("shirts")
       .where("end", ">", now)
       .where("end", "<", later) // end - AvailableDurationMillis < now
+      .limit(1)
       .get();
     if (collection.docs.length === 0) {
       return null;
@@ -27,6 +28,21 @@ export class Firestore {
         doc: collection.docs[0].data() as ShirtDocument
       };
     }
+  }
+
+  // 開発用に、次に販売するシャツを取得する。
+  static async fetchShirtById(id: string): Promise<{
+    id: string;
+    doc: ShirtDocument;
+  } | null> {
+    const doc = await firebase
+      .firestore()
+      .doc(`/shirts/${id}`)
+      .get();
+      return {
+        id: doc.id,
+        doc: doc.data() as ShirtDocument
+      };
   }
 }
 

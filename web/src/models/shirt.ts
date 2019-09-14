@@ -37,10 +37,7 @@ export class ShirtRepository {
       return null;
     } else {
       const { id, doc } = res;
-      const urls = await Storage.queryShirtImageUrls(id);
-      const images = await Promise.all(
-        urls.map(url => Image.download(url))
-      );
+      const images = await fetchShirtImages(id);
       return new Shirt(
         id,
         doc.name,
@@ -51,4 +48,27 @@ export class ShirtRepository {
       );
     }
   }
+
+  static async fetchDemoOneForTesting(): Promise<Shirt> {
+    const res = await Firestore.fetchShirtById("DEMO");
+    if (!res) {
+      throw new Error("Demo shirt is not available");
+    } else {
+      const { id, doc } = res;
+      const images = await fetchShirtImages(id);
+      return new Shirt(
+        id,
+        doc.name,
+        doc.priceYen,
+        moment(doc.end.toMillis()),
+        doc.availableSize,
+        images
+      );
+    }
+  }
+}
+
+async function fetchShirtImages(id: string): Promise<Image[]> {
+  const urls = await Storage.queryShirtImageUrls(id);
+  return await Promise.all(urls.map(url => Image.download(url)));
 }

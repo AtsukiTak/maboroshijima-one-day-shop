@@ -1,26 +1,22 @@
-import React, {FC, useState, useEffect} from 'react';
-import styled from 'styled-components';
-import ReactGA from 'react-ga';
+import React, { FC, useState, useEffect } from "react";
+import styled from "styled-components";
+import ReactGA from "react-ga";
 
-import {Shirt, ShirtRepository} from 'models/shirt';
-import Footer from 'components/footer';
-import {FloatingLogo} from 'components/logo';
-import Countdown from './top/components/countdown';
-import BuyComponent from './top/components/buy';
+import { Shirt, ShirtRepository } from "models/shirt";
+import Footer from "components/footer";
+import { FloatingLogo } from "components/logo";
+import Countdown from "./top/components/countdown";
+import BuyComponent from "./top/components/buy";
 
 const TopPage: FC = () => {
   const [shirt, setShirt] = useState<Shirt | null>(null);
 
   useEffect(() => {
-    ShirtRepository.fetchAvailableOne().then(setShirt);
+    // ShirtRepository.fetchAvailableOne().then(setShirt);
 
-    // 開発用にデモのTシャツを設定する場合は以下のコメントアウトを消し、
-    // demoShirtSumbnailUrl を設定する。
-    // また、↑をコメントアウトするのも忘れない。
-    /*
-    const demoShirtSumbnailUrl ='';
-    setShirt(Shirt.createDemoShirt(demoShirtSumbnailUrl));
-     */
+    // 開発用に次に販売するシャツのデータを取得する。
+    // ↑をコメントアウトするのを忘れない。
+    ShirtRepository.fetchDemoOneForTesting().then(setShirt);
   }, []);
 
   if (shirt) {
@@ -34,7 +30,7 @@ export default TopPage;
 
 const EmptyShop: FC = () => {
   useEffect(() => {
-    ReactGA.pageview('/', [], 'Empty Shop');
+    ReactGA.pageview("/", [], "Empty Shop");
   }, []);
   return (
     <>
@@ -62,15 +58,15 @@ const SoldOut = styled.p`
   text-align: center;
 `;
 
-const Shop: FC<{shirt: Shirt}> = ({shirt}) => {
+const Shop: FC<{ shirt: Shirt }> = ({ shirt }) => {
   useEffect(() => {
-    ReactGA.pageview('/', [], 'Shop');
+    ReactGA.pageview("/", [], "Shop");
   }, []);
 
   return (
     <>
       <ShopContainer>
-        <Image src={shirt.images[0].url} />
+        <ImageComponent src={shirt.images[0].url} />
         <Name>{shirt.name}</Name>
         <BuyComponent shirt={shirt} />
         <Countdown end={shirt.end} />
@@ -88,7 +84,7 @@ const ShopContainer = styled.div`
   padding-top: 10vh;
 `;
 
-const Image = styled.img`
+const ImageComponent = styled.img`
   display: block;
   width: 80%;
   margin: 0 auto;
