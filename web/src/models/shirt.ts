@@ -1,7 +1,6 @@
 import moment, { Moment } from "moment";
 
 import { Firestore, Storage } from "infra/firebase";
-import { buyShirt } from "infra/stripe";
 import { Image } from "models/image";
 
 export class Shirt {
@@ -23,10 +22,6 @@ export class Shirt {
       ["S", "M", "L", "XL"],
       images
     );
-  }
-
-  buy(size: string): Promise<void> {
-    return buyShirt(this.id, size);
   }
 }
 
