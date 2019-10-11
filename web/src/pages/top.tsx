@@ -84,6 +84,7 @@ const Shop: FC<{ shirt: Shirt }> = ({ shirt }) => {
       <ShopContainer>
         <ImageComponent images={shirt.images} />
         <Name>{shirt.name}</Name>
+        <Price>&yen; {shirt.priceYen}<TaxMsg>(税込)</TaxMsg></Price>
         <BuyComponent shirt={shirt} />
         <Countdown end={shirt.end} />
       </ShopContainer>
@@ -105,4 +106,18 @@ const Name = styled.h3`
   padding: 0;
   text-align: center;
   margin-top: 50px;
+`;
+
+const Price = styled.h3`
+  margin: 0;
+  padding: 0;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: normal;
+`;
+
+const TaxMsg = styled.span`
+  margin-left: 4px;
+  font-size: 0.7rem;
 `;
