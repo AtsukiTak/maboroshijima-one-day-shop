@@ -1,27 +1,26 @@
 import React, { FC, useState, useEffect } from "react";
 import styled from "styled-components";
 import ReactGA from "react-ga";
+import Fade from "@material-ui/core/Fade";
+import Container from "@material-ui/core/Container";
 
 import { Shirt, ShirtRepository } from "models/shirt";
 import Footer from "components/footer";
 import { FloatingLogo } from "components/logo";
 
-import Countdown from "./top/components/countdown";
-import BuyComponent from "./top/components/buy";
-import ImageComponent from "./top/components/image";
+import Countdown from "./components/countdown";
+import BuyComponent from "./components/buy";
+import ImageComponent from "./components/image";
 
 const TopPage: FC = () => {
-  const [shirt, setShirt] = useState<Shirt | null | 'Checking'>('Checking');
+  const [shirt, setShirt] = useState<Shirt | null | "Checking">("Checking");
 
   useEffect(() => {
     ShirtRepository.fetchAvailableOne().then(setShirt);
-
-    // 開発用に次に販売するシャツのデータを取得する。
-    // ↑をコメントアウトするのを忘れない。
     // ShirtRepository.fetchDemoOneForTesting().then(setShirt);
   }, []);
 
-  if (shirt === 'Checking') {
+  if (shirt === "Checking") {
     return <CheckingShop />;
   } else if (shirt === null) {
     return <EmptyShop />;
@@ -34,13 +33,15 @@ export default TopPage;
 
 const CheckingShop: FC = () => {
   return (
-    <>
-      <UnavailableContainer>
-        <FloatingLogo />
-        <Message>Loading...</Message>
-      </UnavailableContainer>
-      <Footer />
-    </>
+    <Fade in timeout={500}>
+      <Container>
+        <UnavailableContainer>
+          <FloatingLogo />
+          <Message>Loading...</Message>
+        </UnavailableContainer>
+        <Footer />
+      </Container>
+    </Fade>
   );
 };
 
@@ -49,13 +50,15 @@ const EmptyShop: FC = () => {
     ReactGA.pageview("/", [], "Empty Shop");
   }, []);
   return (
-    <>
-      <UnavailableContainer>
-        <FloatingLogo />
-        <Message>Sorry, sold out</Message>
-      </UnavailableContainer>
-      <Footer />
-    </>
+    <Fade in timeout={3000}>
+      <Container>
+        <UnavailableContainer>
+          <FloatingLogo />
+          <Message>Sorry, sold out</Message>
+        </UnavailableContainer>
+        <Footer />
+      </Container>
+    </Fade>
   );
 };
 
@@ -80,24 +83,26 @@ const Shop: FC<{ shirt: Shirt }> = ({ shirt }) => {
   }, []);
 
   return (
-    <>
-      <ShopContainer>
-        <ImageComponent images={shirt.images} />
-        <Name>{shirt.name}</Name>
-        <Price>&yen; {shirt.priceYen}<TaxMsg>(税込)</TaxMsg></Price>
-        <BuyComponent shirt={shirt} />
-        <Countdown end={shirt.end} />
-      </ShopContainer>
-      <Footer />
-    </>
+    <Fade in timeout={3000}>
+      <Container>
+        <ShopContainer>
+          <ImageComponent images={shirt.images} />
+          <Name>{shirt.name}</Name>
+          <Price>
+            &yen; {shirt.priceYen}
+            <TaxMsg>(税込)</TaxMsg>
+          </Price>
+          <BuyComponent shirt={shirt} />
+          <Countdown end={shirt.end} />
+        </ShopContainer>
+        <Footer />
+      </Container>
+    </Fade>
   );
 };
 
 const ShopContainer = styled.div`
-  width: 90%;
-  max-width: 500px;
-  min-height: calc(100vh - 50px);
-  margin: 0 auto;
+  width: 100%;
   padding-top: 10vh;
 `;
 

@@ -4,9 +4,11 @@ import { Location } from "history";
 import { withRouter } from "react-router-dom";
 import { parse } from "query-string";
 import { Elements } from "react-stripe-elements";
+import Container from "@material-ui/core/Container";
+import Fade from "@material-ui/core/Fade";
 
 import { Shirt, ShirtRepository } from "models/shirt";
-import InputComponents from "./purchase/components/inputs";
+import InputComponents from "./components/inputs";
 
 interface Props {
   location: Location;
@@ -16,8 +18,8 @@ const Page: React.FC<Props> = ({ location }) => {
   const [shirt, setShirt] = React.useState<Shirt | null>(null);
 
   React.useEffect(() => {
-    // ShirtRepository.fetchAvailableOne().then(setShirt);
-    ShirtRepository.fetchDemoOneForTesting().then(setShirt);
+    ShirtRepository.fetchAvailableOne().then(setShirt);
+    // ShirtRepository.fetchDemoOneForTesting().then(setShirt);
   }, []);
 
   if (!shirt) {
@@ -31,22 +33,20 @@ const Page: React.FC<Props> = ({ location }) => {
   }
 
   return (
-    <Container>
-      <ShirtImage src={shirt.images[1].url} />
-      <ShirtName>{`${shirt.name} ( ${size} )`}</ShirtName>
-      <ShirtPrice>&yen; {shirt.priceYen}</ShirtPrice>
-      <Elements>
-        <InputComponents shirt={shirt} size={size} />
-      </Elements>
-    </Container>
+    <Fade in timeout={2000}>
+      <Container>
+        <ShirtImage src={shirt.images[1].url} />
+        <ShirtName>{`${shirt.name} ( ${size} )`}</ShirtName>
+        <ShirtPrice>&yen; {shirt.priceYen}</ShirtPrice>
+        <Elements>
+          <InputComponents shirt={shirt} size={size} />
+        </Elements>
+      </Container>
+    </Fade>
   );
 };
 
 export default withRouter(Page);
-
-const Container = styled.div`
-  padding: 32px 16px;
-`;
 
 const ShirtImage = styled.img`
   display: block;

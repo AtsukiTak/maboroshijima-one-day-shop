@@ -1,15 +1,16 @@
-import React from 'react';
-import styled from 'styled-components';
-import {Link} from 'react-router-dom';
-import ReactGA from 'react-ga';
+import React from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import ReactGA from "react-ga";
 
-import {pc} from 'components/responsive';
-import {FloatingLogo} from 'components/logo';
-import FBPlugin from './about/components/fb-plugin';
+import { pc } from "components/responsive";
+import { FloatingLogo } from "components/logo";
+
+import FBPlugin from "./components/fb-plugin";
 
 const AboutPage: React.FC = () => {
   React.useEffect(() => {
-    ReactGA.pageview('/about', [], 'About');
+    ReactGA.pageview("/about", [], "About");
   }, []);
 
   return (
