@@ -9,7 +9,6 @@ import TopPage from "./pages/top";
 import PurchasePage from "./pages/purchase";
 import AboutPage from "./pages/about";
 import SizeTablePage from "./pages/size_table";
-import PurchageSuccessPage from "./pages/purchace_success";
 import BoringStuff from "./pages/boring_stuff";
 
 const App: React.FC = () => {
@@ -33,7 +32,6 @@ const AppRouter: React.FC = () => (
       <Route path="/purchase" exact component={PurchasePage} />
       <Route path="/about" exact component={AboutPage} />
       <Route path="/size_table" exact component={SizeTablePage} />
-      <Route path="/purchase/success" exact component={PurchageSuccessPage} />
       <Route
         path="/boring_stuff/1"
         exact
