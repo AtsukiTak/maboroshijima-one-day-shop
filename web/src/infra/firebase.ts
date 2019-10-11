@@ -31,7 +31,9 @@ export class Firestore {
   }
 
   // 開発用に、次に販売するシャツを取得する。
-  static async fetchShirtById(id: string): Promise<{
+  static async fetchShirtById(
+    id: string
+  ): Promise<{
     id: string;
     doc: ShirtDocument;
   } | null> {
@@ -39,10 +41,10 @@ export class Firestore {
       .firestore()
       .doc(`/shirts/${id}`)
       .get();
-      return {
-        id: doc.id,
-        doc: doc.data() as ShirtDocument
-      };
+    return {
+      id: doc.id,
+      doc: doc.data() as ShirtDocument
+    };
   }
 }
 
