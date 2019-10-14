@@ -35,7 +35,7 @@ const Page: React.FC<Props> = ({ location }) => {
   return (
     <Fade in timeout={2000}>
       <Container>
-        <ShirtImage src={shirt.images[1].url} />
+        <ShirtImage src={shirt.images[0].url} />
         <ShirtName>{`${shirt.name} ( ${size} )`}</ShirtName>
         <ShirtPrice>&yen; {shirt.priceYen}</ShirtPrice>
         <Elements>
